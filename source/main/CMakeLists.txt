@@ -1,12 +1,14 @@
+cmake_minimum_required (VERSION 3.0)
+
+project(Overmon)
+set(EXECUTABLE_NAME ${PROJECT_NAME})
+set(Tutorial_VERSION_MAJOR 0)
+set(Tutorial_VERSION_MINOR 1)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(Overworld)
-cmake_minimum_required(VERSION 2.8)
-aux_source_directory(src SRC_LIST)
+file(GLOB SRC_LIST Main.cpp Character/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
-
-set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
