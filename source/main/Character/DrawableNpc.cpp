@@ -8,7 +8,7 @@ DrawableNpc::DrawableNpc(size_t gridX, size_t gridY, Direction direction)
 	, rectangleMain_(sf::Vector2f(16, 16))
 	, rectangleDir_(sf::Vector2f(8, 8))
 {
-	rectangleMain_.setFillColor(sf::Color(255, 0, 0));
+	rectangleMain_.setFillColor(sf::Color(255, 255, 0));
 	rectangleDir_.setFillColor(sf::Color(0, 255, 0));
 }
 
