@@ -1,0 +1,7 @@
+[[animation]]
+name = "Player"
+file = "sprites/player.png"
+width = 18
+height = 18
+offset_x = 1
+offset_y = 1

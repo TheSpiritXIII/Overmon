@@ -7,11 +7,11 @@ set(Tutorial_VERSION_MINOR 1)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB SRC_LIST Main.cpp Character/*.cpp)
+file(GLOB SRC_LIST source/*.cpp source/Character/* source/Sprite/* source/External/*)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # Detect and add SFML
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 #Find any version 2.X of SFML
 #See the FindSFML.cmake file for additional details and instructions
 find_package(SFML 2 REQUIRED system window graphics network audio)
