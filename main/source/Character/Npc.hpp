@@ -30,12 +30,10 @@ public:
 	int16_t x() const;
 	int16_t y() const;
 
-	// Deprecated.
-	void update();
-
 	void update(DeltaTime delta);
 protected:
 	uint8_t moving_;
+	uint8_t moveCounter_;
 
 private:
 	int16_t x_;
@@ -46,7 +44,6 @@ private:
 	uint8_t speed_;
 
 	DeltaTime counter_;
-	uint8_t moveCounter_;
 };
 
 }

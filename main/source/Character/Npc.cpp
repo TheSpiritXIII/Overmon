@@ -41,44 +41,6 @@ int16_t Npc::y() const
 	return y_;
 }
 
-void Npc::update()
-{
-	if (moving_ != 0)
-	{
-		switch (direction_)
-		{
-		case Direction::North:
-			y_ -= 1;
-			if (y_ % 16 == 0)
-			{
-				moving_ = false;
-			}
-			break;
-		case Direction::South:
-			y_ += 1;
-			if (y_ % 16 == 0)
-			{
-				moving_ = false;
-			}
-			break;
-		case Direction::East:
-			x_ += 1;
-			if (x_ % 16 == 0)
-			{
-				moving_ = false;
-			}
-			break;
-		case Direction::West:
-			x_ -= 1;
-			if (x_ % 16 == 0)
-			{
-				moving_ = false;
-			}
-			break;
-		}
-	}
-}
-
 void Npc::update(DeltaTime delta)
 {
 	if (moving_ != 0)

@@ -43,7 +43,7 @@ int main()
 		}
 		window.clear(sf::Color(100, 149, 237));
 		player.update(delta);
-		player.draw(window);
+		player.draw(spriteManager, window);
 		window.draw(sprite);
 		window.display();
 
