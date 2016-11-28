@@ -4,9 +4,9 @@
 
 #include "Character/DrawablePlayer.hpp"
 #include "Sprite/DynamicSpriteManager.hpp"
-#include "Base/Counter.hpp"
+#include "Util/Counter.hpp"
 
-const size_t FPS = 60;
+const size_t FPS = 30;
 
 int main()
 {
@@ -30,6 +30,8 @@ int main()
 
 	Counter<4, 1, 4> animationCounter;
 
+	const float delta = 1.0 / FPS;
+
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -40,12 +42,12 @@ int main()
 			}
 		}
 		window.clear(sf::Color(100, 149, 237));
-		player.update();
+		player.update(delta);
 		player.draw(window);
 		window.draw(sprite);
 		window.display();
 
-		animationCounter.update(1.0 / 60.0);
+		animationCounter.update(delta);
 		spriteManager.setTexture(sprite, "Player");
 		uint8_t index = (animationCounter.counterIndex() % 2) + (animationCounter.counterIndex() == 1);
 		spriteManager.setRect(sprite, "Player", index);

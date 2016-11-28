@@ -9,6 +9,10 @@ Npc::Npc(size_t gridX, size_t gridY, Direction direction)
 	, x_(gridX * 16)
 	, y_(gridY * 16)
 	, direction_(direction)
+, moving_(0)
+
+, counter_(0)
+, moveCounter_(0)
 {}
 
 Direction Npc::direction() const
@@ -70,6 +74,44 @@ void Npc::update()
 			{
 				moving_ = false;
 			}
+			break;
+		}
+	}
+}
+
+void Npc::update(DeltaTime delta)
+{
+	if (moving_ != 0)
+	{
+		size_t steps = 0;
+		counter_ += speed_ * 60 * delta;
+		while (counter_ >= 1)
+		{
+			steps += 1;
+			counter_ -= 1;
+		}
+
+		moveCounter_ += steps;
+		if (moveCounter_ >= 16)
+		{
+			counter_ += moveCounter_ - 16;
+			moveCounter_ = 0;
+			moving_ = false;
+		}
+
+		switch (direction_)
+		{
+		case Direction::North:
+			y_ -= steps;
+			break;
+		case Direction::South:
+			y_ += steps;
+			break;
+		case Direction::East:
+			x_ += steps;
+			break;
+		case Direction::West:
+			x_ -= steps;
 			break;
 		}
 	}

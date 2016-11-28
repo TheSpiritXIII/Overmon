@@ -7,7 +7,7 @@ class DrawablePlayer : public DrawableNpc
 {
 public:
 	DrawablePlayer();
-	void update();
+	void update(DeltaTime delta);
 
 private:
 	size_t counterMove_;

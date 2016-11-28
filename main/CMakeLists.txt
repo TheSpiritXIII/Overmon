@@ -7,7 +7,7 @@ set(Tutorial_VERSION_MINOR 1)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB SRC_LIST source/*.cpp source/Character/* source/Sprite/* source/External/* source/Base/*)
+file(GLOB SRC_LIST source/*.cpp source/Character/* source/Sprite/* source/External/* source/Util/*)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # Detect and add SFML

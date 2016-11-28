@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "../Util/Updatable.hpp"
+
 namespace overmon
 {
 
@@ -14,7 +16,7 @@ enum class Direction
 	West  = 3
 };
 
-class Npc
+class Npc : public Updatable<Npc>
 {
 public:
 	Npc(size_t gridX, size_t gridY, Direction direction);
@@ -28,7 +30,12 @@ public:
 	int16_t x() const;
 	int16_t y() const;
 
+	// Deprecated.
 	void update();
+
+	void update(DeltaTime delta);
+protected:
+	uint8_t moving_;
 
 private:
 	int16_t x_;
@@ -36,8 +43,10 @@ private:
 	int8_t gridX_;
 	int8_t gridY_;
 	Direction direction_;
-	uint8_t moving_;
 	uint8_t speed_;
+
+	DeltaTime counter_;
+	uint8_t moveCounter_;
 };
 
 }
