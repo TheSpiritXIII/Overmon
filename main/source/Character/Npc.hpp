@@ -8,9 +8,9 @@ namespace overmon
 
 enum class Direction
 {
-	North = 0,
-	South = 1,
-	East  = 2,
+	North = 2,
+	South = 0,
+	East  = 1,
 	West  = 3
 };
 

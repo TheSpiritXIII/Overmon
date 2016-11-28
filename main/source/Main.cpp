@@ -4,6 +4,7 @@
 
 #include "Character/DrawablePlayer.hpp"
 #include "Sprite/DynamicSpriteManager.hpp"
+#include "Base/Counter.hpp"
 
 const size_t FPS = 60;
 
@@ -21,11 +22,13 @@ int main()
 	sprite.setPosition(128, 128);
 
 	DynamicSpriteManager spriteManager;
-	spriteManager.setSpriteTexture(sprite, "Player");
-	spriteManager.setSpriteRect(sprite, "Player", 0);
+	spriteManager.setTexture(sprite, "Player");
+	spriteManager.setRect(sprite, "Player", 0);
 
 	size_t frame = 0;
 	size_t counter = 0;
+
+	Counter<4, 1, 4> animationCounter;
 
 	while (window.isOpen())
 	{
@@ -42,19 +45,10 @@ int main()
 		window.draw(sprite);
 		window.display();
 
-		counter += 1;
-		if (counter == 30)
-		{
-			counter = 0;
-			frame += 1;
-			if (frame == 12)
-			{
-				frame = 0;
-			}
-
-			spriteManager.setSpriteTexture(sprite, "Player");
-			spriteManager.setSpriteRect(sprite, "Player", frame);
-		}
+		animationCounter.update(1.0 / 60.0);
+		spriteManager.setTexture(sprite, "Player");
+		uint8_t index = (animationCounter.counterIndex() % 2) + (animationCounter.counterIndex() == 1);
+		spriteManager.setRect(sprite, "Player", index);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 		{

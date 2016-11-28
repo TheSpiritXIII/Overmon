@@ -1,4 +1,4 @@
-[[animation]]
+[[sprite]]
 name = "Player"
 file = "sprites/player.png"
 width = 18

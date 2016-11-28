@@ -8,7 +8,7 @@ DynamicSpriteManager::DynamicSpriteManager()
 	reload();
 }
 
-void DynamicSpriteManager::setSpriteTexture(sf::Sprite &sprite, const char *reference)
+void DynamicSpriteManager::setTexture(sf::Sprite &sprite, const char *reference)
 {
 	auto found = _spriteMap.find(reference);
 	if (found != _spriteMap.end())
@@ -18,7 +18,7 @@ void DynamicSpriteManager::setSpriteTexture(sf::Sprite &sprite, const char *refe
 	}
 }
 
-void DynamicSpriteManager::setSpriteRect(sf::Sprite &sprite, const char *reference, size_t index)
+void DynamicSpriteManager::setRect(sf::Sprite &sprite, const char *reference, size_t index)
 {
 	auto found = _spriteMap.find(reference);
 	if (found != _spriteMap.end())
@@ -37,7 +37,7 @@ void DynamicSpriteManager::reload()
 	const char *resources_dir = "../resources/";
 
 	auto config = cpptoml::parse_file(std::string(resources_dir) + "/resources.toml");
-	auto spriteList = config->get_table_array("animation");
+	auto spriteList = config->get_table_array("sprite");
 
 	if (spriteList)
 	{

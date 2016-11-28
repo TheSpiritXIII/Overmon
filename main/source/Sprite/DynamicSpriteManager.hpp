@@ -12,8 +12,8 @@ class DynamicSpriteManager : public SpriteManager<const char *>
 public:
 	DynamicSpriteManager();
 
-	virtual void setSpriteTexture(sf::Sprite &sprite, const char *reference) override;
-	virtual void setSpriteRect(sf::Sprite &sprite, const char *reference, size_t index) override;
+	virtual void setTexture(sf::Sprite &sprite, const char *reference) override;
+	virtual void setRect(sf::Sprite &sprite, const char *reference, size_t index) override;
 
 	void reload();
 
@@ -29,3 +29,9 @@ private:
 
 	std::unordered_map<std::string, Sprite> _spriteMap;
 };
+
+typedef const char *SpriteReferenceType;
+typedef DynamicSpriteManager DefaultSpriteManager;
+
+#define SPRITE_REFERENCE(s) STRINGIFY(s)
+#define STRINGIFY(s) #s
