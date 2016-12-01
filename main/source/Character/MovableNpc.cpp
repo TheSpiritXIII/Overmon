@@ -1,9 +1,9 @@
-#include "Npc.hpp"
+#include "MovableNpc.hpp"
 
 namespace overmon
 {
 
-Npc::Npc(size_t gridX, size_t gridY, Direction direction)
+MovableNpc::MovableNpc(GridType gridX, GridType gridY, Direction direction)
 	: gridX_(gridX)
 	, gridY_(gridY)
 	, x_(gridX * 16)
@@ -15,37 +15,47 @@ Npc::Npc(size_t gridX, size_t gridY, Direction direction)
 , moveCounter_(0)
 {}
 
-Direction Npc::direction() const
+PositionType MovableNpc::x() const
+{
+	return x_;
+}
+
+PositionType MovableNpc::y() const
+{
+	return y_;
+}
+
+Direction MovableNpc::direction() const
 {
 	return direction_;
 }
 
-void Npc::directionSet(Direction direction)
+void MovableNpc::directionSet(Direction direction)
 {
 	direction_ = direction;
 }
 
-void Npc::moveSpeed(uint8_t speed)
+void MovableNpc::moveSpeed(uint8_t speed)
 {
 	moving_ = 1;
 	speed_ = speed;
 }
 
-int16_t Npc::x() const
+uint8_t MovableNpc::moveCounter() const
 {
-	return x_;
+	return moveCounter_;
 }
 
-int16_t Npc::y() const
+bool MovableNpc::moving() const
 {
-	return y_;
+	return moving_;
 }
 
-void Npc::update(DeltaTime delta)
+void MovableNpc::update(DeltaTime delta)
 {
 	if (moving_ != 0)
 	{
-		size_t steps = 0;
+		uint8_t steps = 0;
 		counter_ += speed_ * 60 * delta;
 		while (counter_ >= 1)
 		{
@@ -59,6 +69,22 @@ void Npc::update(DeltaTime delta)
 			counter_ += moveCounter_ - 16;
 			moveCounter_ = 0;
 			moving_ = false;
+
+			switch (direction_)
+			{
+			case Direction::North:
+				gridY_ -= 1;
+				break;
+			case Direction::South:
+				gridY_ += 1;
+				break;
+			case Direction::East:
+				gridX_ += 1;
+				break;
+			case Direction::West:
+				gridX_ -= 1;
+				break;
+			}
 		}
 
 		switch (direction_)

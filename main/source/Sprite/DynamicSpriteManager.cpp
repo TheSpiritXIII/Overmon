@@ -23,9 +23,8 @@ void DynamicSpriteManager::setRect(sf::Sprite &sprite, const char *reference, si
 	auto found = _spriteMap.find(reference);
 	if (found != _spriteMap.end())
 	{
-		size_t textureWidth = 55;
-		size_t textureHeight = 76;
-		size_t columns = textureWidth / found->second.width;
+		auto size = found->second.texture.getSize();
+		size_t columns = size.x / found->second.width;
 		size_t x = (index % columns) * found->second.width;
 		size_t y = (index / columns) * found->second.height;
 		sprite.setTextureRect(sf::IntRect(x, y, found->second.width, found->second.height));

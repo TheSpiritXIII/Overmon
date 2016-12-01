@@ -6,7 +6,7 @@
 #include "Sprite/DynamicSpriteManager.hpp"
 #include "Util/Counter.hpp"
 
-const size_t FPS = 30;
+const size_t FPS = 120;
 
 int main()
 {
@@ -42,13 +42,12 @@ int main()
 			}
 		}
 		window.clear(sf::Color(100, 149, 237));
-		player.update(delta);
-		player.draw(spriteManager, window);
+		player.update(spriteManager, delta);
+		player.draw(window);
 		window.draw(sprite);
 		window.display();
 
 		animationCounter.update(delta);
-		spriteManager.setTexture(sprite, "Player");
 		uint8_t index = (animationCounter.counterIndex() % 2) + (animationCounter.counterIndex() == 1);
 		spriteManager.setRect(sprite, "Player", index);
 
