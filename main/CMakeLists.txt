@@ -1,21 +1,18 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(Overmon)
-set(EXECUTABLE_NAME ${PROJECT_NAME})
-set(Tutorial_VERSION_MAJOR 0)
-set(Tutorial_VERSION_MINOR 1)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB SRC_LIST source/*.cpp source/Character/* source/Sprite/* source/External/* source/Util/*)
+include_directories(${CMAKE_SOURCE_DIR}/source/)
+
+file(GLOB_RECURSE SRC_LIST source/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
-# Detect and add SFML
+# Detect and add SFML 2.x.
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-#Find any version 2.X of SFML
-#See the FindSFML.cmake file for additional details and instructions
 find_package(SFML 2 REQUIRED system window graphics network audio)
 if(SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+	include_directories(${SFML_INCLUDE_DIR})
+	target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
 endif()

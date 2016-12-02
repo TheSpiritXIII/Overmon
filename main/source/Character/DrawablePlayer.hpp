@@ -20,7 +20,7 @@ private:
 	uint8_t leg_;
 	uint8_t runLeg_;
 	DeltaTime wait_;
-	bool wasMoving_;
+	uint8_t wasMoving_;
 };
 
 }

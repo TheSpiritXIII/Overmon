@@ -45,14 +45,18 @@ void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
 
 		if (pressed)
 		{
-			if (directionLast != direction() && !wasMoving_)
+			if (!wasMoving_)
 			{
-				wait_ = 0.1;
+				if (directionLast != direction())
+				{
+					wait_ = 0.1;
+				}
+				runLeg_ = ((leg_) % 2) * 2;
 			}
 			if (wait_ == 0)
 			{
 				moveSpeed(1 + running);
-				wasMoving_ = true;
+				wasMoving_ = 1 + running;
 			}
 		}
 
@@ -73,7 +77,6 @@ void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
 		{
 			manager.setTexture(sprite_, "Player");
 			manager.setRect(sprite_, "Player", static_cast<size_t>(direction()) * 3);
-			runLeg_ = 0;
 		}
 	}
 
@@ -94,9 +97,7 @@ void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
 		}
 		else
 		{
-			size_t counter = leg_;
-			index = counter;
-			std::cout << (runLeg_ == 3 ? "true" : "false") << std::endl;
+			index = runLeg_ % 2;
 			if (index == 1 && runLeg_ == 3)
 			{
 				index += 1;

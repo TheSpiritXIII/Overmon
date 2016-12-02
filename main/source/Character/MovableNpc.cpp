@@ -37,8 +37,8 @@ void MovableNpc::directionSet(Direction direction)
 
 void MovableNpc::moveSpeed(uint8_t speed)
 {
-	moving_ = 1;
 	speed_ = speed;
+	moving_ = speed_ != 0;
 }
 
 uint8_t MovableNpc::moveCounter() const
@@ -49,6 +49,11 @@ uint8_t MovableNpc::moveCounter() const
 bool MovableNpc::moving() const
 {
 	return moving_;
+}
+
+uint8_t MovableNpc::characterFrame(bool leg) const
+{
+	return characterFrame(direction(), moveCounter(), leg);
 }
 
 void MovableNpc::update(DeltaTime delta)
@@ -103,6 +108,16 @@ void MovableNpc::update(DeltaTime delta)
 			break;
 		}
 	}
+}
+
+uint8_t MovableNpc::characterFrame(Direction direction, uint8_t counter, bool leg)
+{
+	uint8_t index = (static_cast<uint8_t>(direction) * 3) + (counter / 8);
+	if (index == 1 && leg)
+	{
+		index = 2;
+	}
+	return index;
 }
 
 }
