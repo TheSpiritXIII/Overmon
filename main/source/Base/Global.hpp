@@ -19,8 +19,8 @@ public:
 	/// The current animation counter truncated as an integer.
 	uint8_t animationCounterIndex() const;
 
-	/// The sprite manager.
-	SpriteManager &spriteManager();
+	/// Retrurns the sprite manager.
+	const SpriteManager &spriteManager() const;
 
 	/// Updates the animation counter.
 	void update(DeltaTime delta);

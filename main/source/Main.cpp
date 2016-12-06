@@ -1,13 +1,10 @@
 #include <SFML/Graphics.hpp>
 
-#include "Base/Player.hpp"
-#include "Resource/SpriteManager.hpp"
-#include "Util/Counter.hpp"
-#include "NPC/Walking.hpp"
-
 #include "Base/Global.hpp"
-
-#include <iostream>
+#include "Base/Player.hpp"
+#include "NPC/Turning.hpp"
+#include "NPC/Walking.hpp"
+#include "Resource/SpriteManager.hpp"
 
 const size_t FPS = 60;
 const size_t WINDOW_WIDTH = 256;
@@ -34,7 +31,7 @@ int main()
 		overmon::Sprite(global.spriteManager(), 0)
 	};
 
-	overmon::DrawablePlayer player(spritePool[0]);
+	overmon::Player player(spritePool[0]);
 	overmon::Turning turningNpc(4, 4, overmon::Direction::East, spritePool[1], 0);
 	overmon::Walking walkingNpc(4, 0, overmon::Direction::East, spritePool[2], 0);
 
@@ -77,10 +74,10 @@ int main()
 
 		window.display();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
-		{
-			global.spriteManager().reload();
-		}
+//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+//		{
+//			global.spriteManager().reload();
+//		}
 	}
 	return EXIT_SUCCESS;
 }

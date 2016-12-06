@@ -13,7 +13,6 @@ template<typename T>
 class BaseSpriteManager
 {
 public:
-
 	/// Sets the texture and origin for the given sprite.
 	void setTexture(sf::Sprite &sprite, SpriteId id) const
 	{
@@ -25,7 +24,6 @@ public:
 	{
 		static_cast<T*>(this)->setFrame(sprite, id, frame);
 	}
- 
 };
 
 }

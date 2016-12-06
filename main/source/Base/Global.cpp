@@ -18,7 +18,7 @@ uint8_t Global::animationCounterIndex() const
 	return counterIndex_;
 }
 
-SpriteManager &Global::spriteManager()
+const SpriteManager &Global::spriteManager() const
 {
 	return spriteManager_;
 }

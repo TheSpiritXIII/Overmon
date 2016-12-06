@@ -7,15 +7,15 @@
 namespace overmon
 {
 
-DrawablePlayer::DrawablePlayer(Sprite &sprite)
+Player::Player(Sprite &sprite)
 	: Movable(0, 0, Direction::South)
+	, sprite_(sprite)
 	, leg_(0)
 	, wait_(0)
 	, wasMoving_(false)
-	, realSprite_(sprite)
 {}
 
-void DrawablePlayer::update(Global &global, DeltaTime delta)
+void Player::update(const Global &global, DeltaTime delta)
 {
 	if (!moving())
 	{
@@ -65,18 +65,18 @@ void DrawablePlayer::update(Global &global, DeltaTime delta)
 		{
 			if (running)
 			{
-				realSprite_.setId(global.spriteManager(), 1, 0);
+				sprite_.setId(global.spriteManager(), 1, 0);
 				runLeg_ = (runLeg_ + 1) % 4;
 			}
 			else
 			{
-				realSprite_.setId(global.spriteManager(), 0, 0);
+				sprite_.setId(global.spriteManager(), 0, 0);
 			}
 			leg_ = !leg_;
 		}
 		else
 		{
-			realSprite_.setId(global.spriteManager(), 0, characterDirectionFrame());
+			sprite_.setId(global.spriteManager(), 0, characterDirectionFrame());
 		}
 	}
 
@@ -103,14 +103,14 @@ void DrawablePlayer::update(Global &global, DeltaTime delta)
 				index += 1;
 			}
 		}
-		realSprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + index);
-		realSprite_.setPosition(x(), y());
+		sprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + index);
+		sprite_.setPosition(x(), y());
 	}
 	else if (wait_ > 0)
 	{
 		// Waiting for player to turn directions (when they have no momentum).
 		wait_ = std::max<DeltaTime>(wait_ - delta, static_cast<DeltaTime>(0.0));
-		realSprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + 1 + leg_);
+		sprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + 1 + leg_);
 	}
 	else
 	{

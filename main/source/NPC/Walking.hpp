@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Turning.hpp"
 #include "Base/Global.hpp"
+#include "NPC/Timely.hpp"
 
 namespace overmon
 {
 
 /// NPC that walks and turns when its timer runs out.
-class Walking : public Turning
+class Walking final : public Timely
 {
 public:
 	/// Initializes an NPC with the indicated offset as the initial action timer.
@@ -21,7 +21,11 @@ public:
 	/// This NPC always ensures that it does not travel more than 2 grid positions away from its
 	/// origin.
 	///
-	void update(Global &global, DeltaTime delta);
+	void update(const Global &global, DeltaTime delta);
+
+protected:
+	/// Performs a random action if possible.
+	void updateAction();
 
 private:
 	const GridType xOriginal_;
