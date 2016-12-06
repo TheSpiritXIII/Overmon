@@ -3,14 +3,17 @@
 
 #include <iostream>
 
+namespace overmon
+{
+
 DynamicSpriteManager::DynamicSpriteManager()
 {
 	reload();
 }
 
-void DynamicSpriteManager::setTexture(sf::Sprite &sprite, const char *reference)
+void DynamicSpriteManager::setTexture(sf::Sprite &sprite, SpriteId id) const
 {
-	auto found = _spriteMap.find(reference);
+	auto found = _spriteMap.find(id);
 	if (found != _spriteMap.end())
 	{
 		sprite.setTexture(found->second.texture);
@@ -18,15 +21,15 @@ void DynamicSpriteManager::setTexture(sf::Sprite &sprite, const char *reference)
 	}
 }
 
-void DynamicSpriteManager::setRect(sf::Sprite &sprite, const char *reference, size_t index)
+void DynamicSpriteManager::setFrame(sf::Sprite &sprite, SpriteId id, uint8_t frame) const
 {
-	auto found = _spriteMap.find(reference);
+	auto found = _spriteMap.find(id);
 	if (found != _spriteMap.end())
 	{
 		auto size = found->second.texture.getSize();
 		size_t columns = size.x / found->second.width;
-		size_t x = (index % columns) * found->second.width;
-		size_t y = (index / columns) * found->second.height;
+		size_t x = (frame % columns) * found->second.width;
+		size_t y = (frame / columns) * found->second.height;
 		sprite.setTextureRect(sf::IntRect(x, y, found->second.width, found->second.height));
 	}
 }
@@ -42,13 +45,13 @@ void DynamicSpriteManager::reload()
 	{
 		for (const auto &table : *spriteList)
 		{
-			auto name = table->get_as<std::string>("name");
-			if (name)
+			auto id = table->get_as<uint8_t>("id");
+			if (id)
 			{
-				auto found = _spriteMap.find(*name);
+				auto found = _spriteMap.find(*id);
 				if (found == _spriteMap.end())
 				{
-					found = _spriteMap.emplace(*name, Sprite()).first;
+					found = _spriteMap.emplace(*id, Sprite()).first;
 				}
 
 				auto file = table->get_as<std::string>("file");
@@ -72,4 +75,6 @@ void DynamicSpriteManager::reload()
 			}
 		}
 	}
+}
+
 }

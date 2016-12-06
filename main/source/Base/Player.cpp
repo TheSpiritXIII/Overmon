@@ -1,20 +1,21 @@
-#include "DrawablePlayer.hpp"
+#include "Player.hpp"
 
-#include "../Sprite/DynamicSpriteManager.hpp"
+#include "Resource/SpriteManager.hpp"
 
 #include <iostream>
 
 namespace overmon
 {
 
-DrawablePlayer::DrawablePlayer()
-	: MovableNpc(0, 0, Direction::South)
+DrawablePlayer::DrawablePlayer(Sprite &sprite)
+	: Movable(0, 0, Direction::South)
 	, leg_(0)
 	, wait_(0)
 	, wasMoving_(false)
+	, realSprite_(sprite)
 {}
 
-void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
+void DrawablePlayer::update(Global &global, DeltaTime delta)
 {
 	if (!moving())
 	{
@@ -64,25 +65,24 @@ void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
 		{
 			if (running)
 			{
-				manager.setTexture(sprite_, "PlayerRunning");
+				realSprite_.setId(global.spriteManager(), 1, 0);
 				runLeg_ = (runLeg_ + 1) % 4;
 			}
 			else
 			{
-				manager.setTexture(sprite_, "Player");
+				realSprite_.setId(global.spriteManager(), 0, 0);
 			}
 			leg_ = !leg_;
 		}
 		else
 		{
-			manager.setTexture(sprite_, "Player");
-			manager.setRect(sprite_, "Player", static_cast<size_t>(direction()) * 3);
+			realSprite_.setId(global.spriteManager(), 0, characterDirectionFrame());
 		}
 	}
 
 	if (moving())
 	{
-		MovableNpc::update(delta);
+		Movable::update(delta);
 		bool running = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
 
 		uint8_t index;
@@ -103,24 +103,19 @@ void DrawablePlayer::update(DynamicSpriteManager &manager, DeltaTime delta)
 				index += 1;
 			}
 		}
-		manager.setRect(sprite_, "Player", static_cast<size_t>(direction()) * 3 + index);
+		realSprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + index);
+		realSprite_.setPosition(x(), y());
 	}
 	else if (wait_ > 0)
 	{
 		// Waiting for player to turn directions (when they have no momentum).
 		wait_ = std::max<DeltaTime>(wait_ - delta, static_cast<DeltaTime>(0.0));
-		manager.setRect(sprite_, "Player", static_cast<size_t>(direction()) * 3 + 1 + leg_);
+		realSprite_.setFrame(global.spriteManager(), static_cast<size_t>(direction()) * 3 + 1 + leg_);
 	}
 	else
 	{
 		wasMoving_ = false;
 	}
-}
-
-void DrawablePlayer::draw(sf::RenderTarget &target, const sf::RenderStates &states)
-{
-	sprite_.setPosition(x(), y());
-	target.draw(sprite_, states);
 }
 
 }

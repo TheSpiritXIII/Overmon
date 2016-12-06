@@ -1,44 +1,42 @@
-#include <iostream>
-
 #include <SFML/Graphics.hpp>
 
-#include "Character/DrawablePlayer.hpp"
-#include "Sprite/DynamicSpriteManager.hpp"
+#include "Base/Player.hpp"
+#include "Resource/SpriteManager.hpp"
 #include "Util/Counter.hpp"
-#include "Character/WalkingNpc.hpp"
+#include "NPC/Walking.hpp"
 
-const size_t FPS = 30;
+#include "Base/Global.hpp"
+
+#include <iostream>
+
+const size_t FPS = 60;
+const size_t WINDOW_WIDTH = 256;
+const size_t WINDOW_HEIGHT = 192;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(512, 394), "Overmon");
-//	window.setSize(sf::Vector2u(, ));
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2), "Overmon");
 	window.setFramerateLimit(FPS);
 
 	sf::View view;
-	view.setSize(256, 192);
+	view.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
 	window.setView(view);
 
 	sf::Event event;
 
-	overmon::DrawablePlayer player;
+	overmon::Global global;
 
-	sf::Sprite sprite;
-	sprite.setPosition(64, 64);
+	overmon::Sprite spritePool[3] =
+	{
+		overmon::Sprite(global.spriteManager(), 0),
+		overmon::Sprite(global.spriteManager(), 0),
+		overmon::Sprite(global.spriteManager(), 0)
+	};
 
-	DynamicSpriteManager spriteManager;
-	spriteManager.setTexture(sprite, "Player");
-	spriteManager.setRect(sprite, "Player", 0);
-
-	size_t frame = 0;
-	size_t counter = 0;
-
-	Counter<4, 1, 4> animationCounter;
-
-	overmon::Sprite<const char*> npcSprite(spriteManager, "Player");
-
-	overmon::Walking<const char*> walkingNpc(4, 4, overmon::Direction::East, npcSprite);
+	overmon::DrawablePlayer player(spritePool[0]);
+	overmon::Turning turningNpc(4, 4, overmon::Direction::East, spritePool[1], 0);
+	overmon::Walking walkingNpc(4, 0, overmon::Direction::East, spritePool[2], 0);
 
 	const float delta = 1.0 / FPS;
 
@@ -51,27 +49,37 @@ int main()
 				window.close();
 			}
 		}
-		window.clear(sf::Color(100, 149, 237));
-		player.update(spriteManager, delta);
-		player.draw(window);
+		global.update(delta);
+		player.update(global, delta);
+		turningNpc.update(global, delta);
+		walkingNpc.update(global, delta);
 
-		walkingNpc.update(spriteManager, delta);
-		npcSprite.draw(window);
-		window.draw(sprite);
-
-
-		//view.setCenter(player.x() + 8, player.y() + 8);
+		view.setCenter(player.x() + 8, player.y() + 8);
 		window.setView(view);
+
+		window.clear(sf::Color(100, 149, 237));
+
+		std::vector<overmon::Sprite*> spriteDrawPool;
+		for (size_t i = 0; i < 3; ++i)
+		{
+			spriteDrawPool.push_back(&spritePool[i]);
+		}
+		std::sort(spriteDrawPool.begin(), spriteDrawPool.end(), [](overmon::Sprite *left, overmon::Sprite *right)
+		{
+			return left->sprite().getPosition().y < right->sprite().getPosition().y;
+		});
+
+		for (auto && sprite : spriteDrawPool)
+		{
+			sprite->draw(window);
+		}
+
 
 		window.display();
 
-		animationCounter.update(delta);
-		uint8_t index = (animationCounter.counterIndex() % 2) + (animationCounter.counterIndex() == 1);
-		spriteManager.setRect(sprite, "Player", index);
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 		{
-			spriteManager.reload();
+			global.spriteManager().reload();
 		}
 	}
 	return EXIT_SUCCESS;

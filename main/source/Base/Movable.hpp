@@ -10,17 +10,23 @@ typedef int8_t GridType;
 typedef int16_t PositionType;
 
 /// NPC instance that be moved on a tiled basis.
-class MovableNpc : public Updatable<MovableNpc>
+class Movable : public Updatable<Movable>
 {
 public:
 	/// Creates an NPC with the given grid position and direction.
-	MovableNpc(GridType gridX, GridType gridY, Direction direction);
+	Movable(GridType gridX, GridType gridY, Direction direction);
 
 	/// The x coordinate of the NPC.
 	PositionType x() const;
 
 	/// The y coordinate of the NPC.
 	PositionType y() const;
+
+	/// The x grid coordinate of the NPC.
+	PositionType xGrid() const;
+
+	/// The y grid coordinate of the NPC.
+	PositionType yGrid() const;
 
 	/// Returns the current direction.
 	Direction direction() const;
@@ -37,7 +43,10 @@ public:
 	/// Returns true if the NPC is moving with a non-zero speed.
 	bool moving() const;
 
-	/// Returns the current character frame based on the current distance traveled.
+	/// Returns the current character frame based on the current direction.
+	uint8_t characterDirectionFrame() const;
+
+	/// Returns the current character frame based on the current direction distance traveled.
 	uint8_t characterFrame(bool leg) const;
 
 	/// Moves the NPC position using the last given speed and direction.
@@ -45,14 +54,17 @@ public:
 
 	/// Calculates the character frame index for a 3-frame character sheet.
 	/// @param direction The direction the character is facing.
+	static uint8_t characterDirectionFrame(Direction direction);
+
+	/// Calculates the character frame index for a 3-frame character sheet.
+	/// @param direction The direction the character is facing.
 	/// @param counter The total distance traveled.
 	/// @param leg The leg that the character is walking with. This should alternate.
 	static uint8_t characterFrame(Direction direction, uint8_t counter, bool leg);
 
-protected:
-	GridType gridX_;
-	GridType gridY_;
 private:
+	GridType xGrid_;
+	GridType yGrid_;
 	PositionType x_;
 	PositionType y_;
 	Direction direction_;
