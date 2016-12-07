@@ -5,8 +5,6 @@
 namespace overmon
 {
 
-void debug() {}
-
 template<typename First>
 void debug(First &&first)
 {
@@ -17,7 +15,7 @@ template<typename First, typename ...Rest>
 void debug(First &&first, Rest &&...rest)
 {
 	std::cout << std::forward<First>(first) << " ";
-	log(std::forward<Rest>(rest)...);
+	debug(std::forward<Rest>(rest)...);
 }
 
 }

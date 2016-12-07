@@ -2,8 +2,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <experimental/filesystem>
 
 #include "BaseSpriteManager.hpp"
+
+using namespace std::experimental;
 
 namespace overmon
 {
@@ -28,7 +31,7 @@ private:
 		sf::Texture texture;
 	};
 
-	std::unordered_map<SpriteId, Sprite> _spriteMap;
+	std::unordered_map<SpriteId, Sprite> spriteMap_;
 };
 
 }

@@ -1,10 +1,16 @@
-#include "DynamicSpriteManager.hpp"
-#include "../External/cpptoml.h"
-
+#include <experimental/filesystem>
 #include <iostream>
+
+#include "External/cpptoml.h"
+#include "Resource/DynamicManager.hpp"
+#include "Resource/DynamicSpriteManager.hpp"
+#include "Util/Debug.hpp"
 
 namespace overmon
 {
+
+static const filesystem::path resourcesDirectory =
+	filesystem::path(RESOURCES_DIRECTORY).append("/sprites/");
 
 DynamicSpriteManager::DynamicSpriteManager()
 {
@@ -13,8 +19,8 @@ DynamicSpriteManager::DynamicSpriteManager()
 
 void DynamicSpriteManager::setTexture(sf::Sprite &sprite, SpriteId id) const
 {
-	auto found = _spriteMap.find(id);
-	if (found != _spriteMap.end())
+	auto found = spriteMap_.find(id);
+	if (found != spriteMap_.end())
 	{
 		sprite.setTexture(found->second.texture);
 		sprite.setOrigin(found->second.offset_x, found->second.offset_y);
@@ -23,8 +29,8 @@ void DynamicSpriteManager::setTexture(sf::Sprite &sprite, SpriteId id) const
 
 void DynamicSpriteManager::setFrame(sf::Sprite &sprite, SpriteId id, uint8_t frame) const
 {
-	auto found = _spriteMap.find(id);
-	if (found != _spriteMap.end())
+	auto found = spriteMap_.find(id);
+	if (found != spriteMap_.end())
 	{
 		auto size = found->second.texture.getSize();
 		size_t columns = size.x / found->second.width;
@@ -36,9 +42,19 @@ void DynamicSpriteManager::setFrame(sf::Sprite &sprite, SpriteId id, uint8_t fra
 
 void DynamicSpriteManager::reload()
 {
-	const char *resources_dir = "../resources/";
+	debug("Reloading all sprites...");
 
-	auto config = cpptoml::parse_file(std::string(resources_dir) + "/resources.toml");
+	filesystem::path manifestPath(resourcesDirectory);
+	manifestPath.append("/manifest.toml");
+
+	if (!filesystem::exists(manifestPath))
+	{
+		debug("Unable to find manifest file.");
+		debug("\tAt path:", manifestPath);
+		return;
+	}
+
+	auto config = cpptoml::parse_file(manifestPath.c_str());
 	auto spriteList = config->get_table_array("sprite");
 
 	if (spriteList)
@@ -48,16 +64,25 @@ void DynamicSpriteManager::reload()
 			auto id = table->get_as<uint8_t>("id");
 			if (id)
 			{
-				auto found = _spriteMap.find(*id);
-				if (found == _spriteMap.end())
+				auto filepath = table->get_as<std::string>("file");
+				if (filepath)
 				{
-					found = _spriteMap.emplace(*id, Sprite()).first;
-				}
+					filesystem::path path = filesystem::canonical(*filepath, resourcesDirectory);
 
-				auto file = table->get_as<std::string>("file");
-				if (file)
-				{
-					found->second.texture.loadFromFile(resources_dir + *file);
+					if (!filesystem::exists(path))
+					{
+						debug("Unable to find sprite file. Skipping.");
+						debug("  At path:", path);
+						continue;
+					}
+
+					auto found = spriteMap_.find(*id);
+					if (found == spriteMap_.end())
+					{
+						found = spriteMap_.emplace(*id, Sprite()).first;
+					}
+
+					found->second.texture.loadFromFile(path.c_str());
 					auto textureSize = found->second.texture.getSize();
 
 					auto data = table->get_as<size_t>("width");
@@ -75,6 +100,8 @@ void DynamicSpriteManager::reload()
 			}
 		}
 	}
+
+	debug("Successfully loaded", spriteMap_.size(), "sprites.");
 }
 
 }

@@ -6,7 +6,7 @@ namespace overmon
 {
 
 /// The variable type signifying unique sprites.
-typedef uint8_t SpriteId;
+typedef uint8_t AreaId;
 
 /// Loads and stores area metadata.
 template<typename T>
@@ -20,7 +20,8 @@ public:
 	}
 
 	/// Draws the current area.
-	void draw(sf::RenderTarget &target, const RenderStates& states = RenderStates::Default)
+	void draw(sf::RenderTarget &target,
+		const sf::RenderStates& states = sf::RenderStates::Default) const
 	{
 		static_cast<T*>(this)->draw(target, states);
 	}

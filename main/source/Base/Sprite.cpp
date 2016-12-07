@@ -35,7 +35,7 @@ void Sprite::setFrame(const SpriteManager &manager, uint8_t frame)
 	manager.setFrame(sprite_, spriteId_, frame);
 }
 
-void Sprite::draw(sf::RenderTarget &target, const sf::RenderStates &states)
+void Sprite::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
 {
 	target.draw(sprite_, states);
 }

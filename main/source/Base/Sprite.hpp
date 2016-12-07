@@ -28,7 +28,8 @@ public:
 	void setFrame(const SpriteManager &manager, uint8_t frame);
 
 	/// Draws the sprite.
-	void draw(sf::RenderTarget &target, const sf::RenderStates &states = sf::RenderStates::Default);
+	void draw(sf::RenderTarget &target,
+		const sf::RenderStates &states = sf::RenderStates::Default) const;
 
 private:
 	sf::Sprite sprite_;

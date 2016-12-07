@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(${CMAKE_SOURCE_DIR}/source/)
 
-file(GLOB_RECURSE SRC_LIST source/*.cpp source/*.hpp)
+file(GLOB_RECURSE SRC_LIST source/*.cpp source/*.hpp source/*.h)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
+target_link_libraries(${PROJECT_NAME} stdc++fs)
 
 # Detect and add SFML 2.x.
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
