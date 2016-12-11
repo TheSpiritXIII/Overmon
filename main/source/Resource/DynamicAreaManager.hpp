@@ -15,6 +15,10 @@ public:
 		AreaId areaSouth;
 		AreaId areaEast;
 		AreaId areaWest;
+		int32_t areaNorthOffset;
+		int32_t areaSouthOffset;
+		int32_t areaEastOffset;
+		int32_t areaWestOffset;
 		DynamicArea area;
 	};
 
@@ -25,6 +29,8 @@ public:
 	void drawForeground(sf::RenderTarget &target,
 		const sf::RenderStates& states = sf::RenderStates::Default) const;
 	void reload();
+
+	static std::unordered_map<AreaId, Area> load();
 
 private:
 	void draw(bool foreground, sf::RenderTarget &target,

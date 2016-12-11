@@ -4,8 +4,9 @@
 #include "Base/Player.hpp"
 #include "NPC/Turning.hpp"
 #include "NPC/Walking.hpp"
-#include "Resource/SpriteManager.hpp"
 #include "Resource/AreaManager.hpp"
+#include "Resource/SpriteManager.hpp"
+//#include "Resource/RegionViewer.hpp"
 
 const size_t FPS = 60;
 const size_t WINDOW_WIDTH = 256;
@@ -37,6 +38,8 @@ int main()
 	overmon::Walking walkingNpc(4, 0, overmon::Direction::East, spritePool[2], 0);
 
 	overmon::AreaManager areaManager;
+//	overmon::RegionViewer regionViewer;
+//	regionViewer.reload();
 
 	const float delta = 1.0 / FPS;
 
@@ -75,6 +78,8 @@ int main()
 		{
 			sprite->draw(window);
 		}
+
+//		regionViewer.draw(window);
 
 		areaManager.drawForeground(window);
 		window.display();

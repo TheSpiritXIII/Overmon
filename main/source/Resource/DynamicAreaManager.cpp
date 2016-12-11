@@ -36,7 +36,8 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaNorth = areaMap_.find(area.areaNorth)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(0, -static_cast<float>(areaNorth.area.height()));
+		transformState.transform.translate(area.areaNorthOffset,
+			-static_cast<float>(areaNorth.area.height()));
 		areaNorth.area.draw(foreground, target, transformState);
 	}
 
@@ -45,7 +46,7 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaSouth = areaMap_.find(area.areaSouth)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(0, area.area.height());
+		transformState.transform.translate(area.areaSouthOffset, area.area.height());
 		areaSouth.area.draw(foreground, target, transformState);
 	}
 
@@ -54,7 +55,7 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaEast = areaMap_.find(area.areaEast)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(area.area.width(), 0);
+		transformState.transform.translate(area.area.width(), area.areaEastOffset);
 		areaEast.area.draw(foreground, target, transformState);
 	}
 
@@ -63,7 +64,8 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaWest = areaMap_.find(area.areaWest)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(-static_cast<float>(areaWest.area.width()), 0);
+		transformState.transform.translate(-static_cast<float>(areaWest.area.width()),
+			area.areaWestOffset);
 		areaWest.area.draw(foreground, target, transformState);
 	}
 }
@@ -82,6 +84,12 @@ void DynamicAreaManager::drawForeground(sf::RenderTarget &target,
 
 void DynamicAreaManager::reload()
 {
+	areaMap_ = load();
+}
+
+std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
+{
+	std::unordered_map<AreaId, DynamicAreaManager::Area> areaMap;
 	debug("Reloading all areas...");
 
 	filesystem::path manifestPath(resourcesDirectory);
@@ -91,7 +99,7 @@ void DynamicAreaManager::reload()
 	{
 		debug("Unable to find manifest file.");
 		debug("\tAt path:", manifestPath);
-		return;
+		return std::unordered_map<AreaId, DynamicAreaManager::Area>();
 	}
 
 	auto config = cpptoml::parse_file(manifestPath.c_str());
@@ -116,30 +124,44 @@ void DynamicAreaManager::reload()
 						continue;
 					}
 
-					auto found = areaMap_.find(*id);
-					if (found == areaMap_.end())
+					auto found = areaMap.find(*id);
+					if (found == areaMap.end())
 					{
-						found = areaMap_.emplace(*id, Area()).first;
+						found = areaMap.emplace(*id, Area()).first;
 					}
 
 					found->second.area.loadArea(path.c_str());
 
-					auto data = table->get_as<AreaId>("north");
-					found->second.areaNorth = data ? *data : *id;
+					auto border = table->get_as<AreaId>("north");
+					found->second.areaNorth = border ? *border : *id;
 
-					data = table->get_as<AreaId>("south");
-					found->second.areaSouth = data ? *data : *id;
+					border = table->get_as<AreaId>("south");
+					found->second.areaSouth = border ? *border : *id;
 
-					data = table->get_as<AreaId>("east");
-					found->second.areaEast = data ? *data : *id;
+					border = table->get_as<AreaId>("east");
+					found->second.areaEast = border ? *border : *id;
 
-					data = table->get_as<AreaId>("west");
-					found->second.areaWest = data ? *data : *id;
+					border = table->get_as<AreaId>("west");
+					found->second.areaWest = border ? *border : *id;
+
+					auto offset = table->get_as<int32_t>("northOffset");
+					found->second.areaNorthOffset = offset ? *offset * 16 : 0;
+
+					offset = table->get_as<int32_t>("southOffset");
+					found->second.areaSouthOffset = offset ? *offset * 16 : 0;
+
+					offset = table->get_as<int32_t>("eastOffset");
+					found->second.areaEastOffset = offset ? *offset * 16 : 0;
+
+					offset = table->get_as<int32_t>("westOffset");
+					found->second.areaWestOffset = offset ? *offset * 16 : 0;
 				}
 			}
 		}
 	}
-	debug("Successfully loaded", areaMap_.size(), "areas.");
+	debug("Successfully loaded", areaMap.size(), "areas.");
+
+	return areaMap;
 }
 
 }
