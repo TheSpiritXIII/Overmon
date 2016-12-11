@@ -57,7 +57,7 @@ int main()
 		view.setCenter(player.x() + 8, player.y() + 8);
 		window.setView(view);
 
-		window.clear(sf::Color(100, 149, 237));
+		window.clear();
 
 		areaManager.drawBackground(window);
 

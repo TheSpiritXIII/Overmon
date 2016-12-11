@@ -16,10 +16,35 @@ typedef std::pair<size_t, sf::Texture*> GidPair;
 
 static std::unordered_map<std::string, sf::Texture*> textureMap;
 
-std::vector<GidPair> loadAreaImages(tinyxml2::XMLElement *tilesetElement, const char *relativePath)
+std::vector<GidPair> loadAreaImages(tinyxml2::XMLElement *tilesetElement, const char *relativePath,
+	size_t gid = 0)
 {
-	std::vector<GidPair> gidMap;
+	if (gid == 0)
+	{
+		gid = std::stoul(tilesetElement->Attribute("firstgid"));
+	}
+
 	auto child = tilesetElement->FirstChildElement();
+	if (child == nullptr)
+	{
+		tinyxml2::XMLDocument document;
+		std::error_code error_code;
+		auto sourceName = tilesetElement->Attribute("source");
+		auto sourcePath = filesystem::canonical(sourceName, relativePath, error_code);
+		if (error_code || !filesystem::exists(sourcePath))
+		{
+			debug("Unable to load tileset.");
+			debug("  From file:", relativePath);
+			debug("  Tileset path:", tilesetElement->Attribute("source"));
+			return std::vector<GidPair>();
+		}
+		document.LoadFile(sourcePath.c_str());
+		return loadAreaImages(document.FirstChildElement("tileset"),
+			sourcePath.parent_path().c_str(), gid);
+	}
+
+	std::vector<GidPair> gidMap;
+
 	while (child != nullptr)
 	{
 		if (std::experimental::string_view(child->Value()) == "image")
@@ -38,7 +63,6 @@ std::vector<GidPair> loadAreaImages(tinyxml2::XMLElement *tilesetElement, const 
 			}
 			// Else, skip adding because already there.
 
-			size_t gid = std::stoul(tilesetElement->Attribute("firstgid"));
 			gidMap.push_back(GidPair(gid, textureFound->second));
 		}
 		child = child->NextSiblingElement();
@@ -88,6 +112,8 @@ std::vector<sf::Sprite> loadAreaTiles(tinyxml2::XMLElement *layerElement,
 
 void DynamicArea::loadArea(const char *filename)
 {
+	width_ = 0;
+	height_ = 0;
 	tilesForeground_.clear();
 	tilesBackground_.clear();
 
@@ -100,6 +126,9 @@ void DynamicArea::loadArea(const char *filename)
 
 	filesystem::path relativePath = filesystem::canonical(filesystem::path(filename).parent_path());
 	auto mapElement = document.FirstChildElement("map");
+	width_ = std::stoul(mapElement->Attribute("width")) * 16;
+	height_ = std::stoul(mapElement->Attribute("height")) * 16;
+
 	auto child = mapElement->FirstChildElement();
 	std::vector<GidPair> gidMap;
 	while (child != nullptr)
@@ -107,7 +136,17 @@ void DynamicArea::loadArea(const char *filename)
 		auto elementType = std::experimental::string_view(child->Value());
 		if (elementType == "tileset")
 		{
-			gidMap = loadAreaImages(child, relativePath.c_str());
+			std::vector<GidPair> gidLoaded = loadAreaImages(child, relativePath.c_str());
+			if (gidLoaded.empty())
+			{
+				debug("Unable to parse tileset:", filename);
+				debug("  Unable to read tileset image properties.");
+				return;
+			}
+			else
+			{
+				gidMap.insert(gidMap.end(), gidLoaded.begin(), gidLoaded.end());
+			}
 		}
 		else if (elementType == "layer")
 		{
@@ -133,6 +172,16 @@ void DynamicArea::loadArea(const char *filename)
 	}
 }
 
+size_t DynamicArea::width() const
+{
+	return width_;
+}
+
+size_t DynamicArea::height() const
+{
+	return height_;
+}
+
 void DynamicArea::drawBackground(sf::RenderTarget &target, const sf::RenderStates &states) const
 {
 	for (auto &&tile : tilesForeground_)
@@ -146,6 +195,19 @@ void DynamicArea::drawForeground(sf::RenderTarget &target, const sf::RenderState
 	for (auto &&tile : tilesBackground_)
 	{
 		target.draw(tile, states);
+	}
+}
+
+void DynamicArea::draw(bool background, sf::RenderTarget &target,
+	const sf::RenderStates &states) const
+{
+	if (background)
+	{
+		drawBackground(target, states);
+	}
+	else
+	{
+		drawForeground(target, states);
 	}
 }
 
