@@ -51,25 +51,25 @@ void RegionViewer::reload()
 
 		add_area_if(areaProcess->second.areaNorth, [&](const DynamicArea &areaFound)
 		{
-			auto offset = areaProcess->second.areaNorthOffset * 16;
+			auto offset = areaProcess->second.areaNorthOffset;
 			return sf::Vector2f(offset, -static_cast<float>(areaFound.height()));
 		});
 
 		add_area_if(areaProcess->second.areaSouth, [&](const DynamicArea &areaFound)
 		{
-			auto offset = areaProcess->second.areaSouthOffset * 16;
+			auto offset = areaProcess->second.areaSouthOffset;
 			return sf::Vector2f(offset, areaProcess->second.area.height());
 		});
 
 		add_area_if(areaProcess->second.areaEast, [&](const DynamicArea &areaFound)
 		{
-			auto offset = areaProcess->second.areaEastOffset * 16;
+			auto offset = areaProcess->second.areaEastOffset;
 			return sf::Vector2f(areaProcess->second.area.width(), offset);
 		});
 
 		add_area_if(areaProcess->second.areaWest, [&](const DynamicArea &areaFound)
 		{
-			auto offset = areaProcess->second.areaWestOffset * 16;
+			auto offset = areaProcess->second.areaWestOffset;
 			return sf::Vector2f(-static_cast<float>(areaFound.width()), offset);
 		});
 

@@ -6,20 +6,23 @@
 #include "NPC/Walking.hpp"
 #include "Resource/AreaManager.hpp"
 #include "Resource/SpriteManager.hpp"
-//#include "Resource/RegionViewer.hpp"
+#include "Resource/RegionViewer.hpp"
+//#include "Util/Navigator.hpp"
+//#include "Util/NavigatorDisplay.hpp"
 
 const size_t FPS = 60;
-const size_t WINDOW_WIDTH = 256;
-const size_t WINDOW_HEIGHT = 192;
+const size_t VIEW_WIDTH = 256;
+const size_t VIEW_HEIGHT = 192;
+const size_t WINDOW_WIDTH = VIEW_WIDTH * 2;
+const size_t WINDOW_HEIGHT = VIEW_HEIGHT * 2;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2), "Overmon");
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Overmon");
 	window.setFramerateLimit(FPS);
 
 	sf::View view;
-	view.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
+	view.setSize(VIEW_WIDTH, VIEW_HEIGHT);
 	window.setView(view);
 
 	sf::Event event;
@@ -41,6 +44,9 @@ int main()
 //	overmon::RegionViewer regionViewer;
 //	regionViewer.reload();
 
+//	overmon::Navigator navigator(window);
+//	overmon::NavigatorDisplay navigatorDisplay;
+
 	const float delta = 1.0 / FPS;
 
 	while (window.isOpen())
@@ -51,6 +57,8 @@ int main()
 			{
 				window.close();
 			}
+//			navigator.update(event);
+//			navigatorDisplay.update(navigator);
 		}
 		global.update(delta);
 		player.update(global, delta);
@@ -59,6 +67,7 @@ int main()
 
 		view.setCenter(player.x() + 8, player.y() + 8);
 		window.setView(view);
+//		window.setView(navigator.view());
 
 		window.clear();
 
@@ -80,6 +89,7 @@ int main()
 		}
 
 //		regionViewer.draw(window);
+//		navigatorDisplay.draw(window);
 
 		areaManager.drawForeground(window);
 		window.display();
