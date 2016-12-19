@@ -5,9 +5,9 @@ namespace overmon
 
 Walking::Walking(GridType gridX, GridType gridY, Direction direction, Sprite &sprite, DeltaTime off)
 	: Timely(gridX, gridY, direction, sprite, off)
-	, leg_(false)
 	, xOriginal_(xGrid())
 	, yOriginal_(yGrid())
+	, leg_(false)
 {}
 
 template <typename UnsignedType>

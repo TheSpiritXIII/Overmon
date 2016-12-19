@@ -62,8 +62,9 @@ std::vector<GidPair> loadAreaImages(tinyxml2::XMLElement *tilesetElement, const 
 				sf::Texture *texture = new sf::Texture();
 				texture->loadFromFile(textureFilename);
 				texture->setSmooth(false);
-				auto thing = textureMap.emplace(textureFilename, texture);
-				textureFound = textureMap.find(textureFilename);
+
+				auto textureAdded = textureMap.emplace(textureFilename, texture);
+				textureFound = textureAdded.first;
 			}
 			// Else, skip adding because already there.
 
