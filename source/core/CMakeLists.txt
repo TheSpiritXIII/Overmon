@@ -18,4 +18,6 @@ if(SFML_FOUND)
 	target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
 endif()
 
-target_link_libraries(${PROJECT_NAME} stdc++fs)
+if(NOT MSVC)
+	target_link_libraries(${PROJECT_NAME} stdc++fs)
+endif()

@@ -1,5 +1,5 @@
 #include <cassert>
-#include <experimental/string_view>
+#include <experimental/string>
 #include <experimental/filesystem>
 #include <unordered_map>
 
@@ -38,16 +38,19 @@ std::vector<GidPair> loadAreaImages(tinyxml2::XMLElement *tilesetElement, const 
 			debug("  Tileset path:", tilesetElement->Attribute("source"));
 			return std::vector<GidPair>();
 		}
-		document.LoadFile(sourcePath.c_str());
+		// TODO: filesystem
+		document.LoadFile(sourcePath.string().c_str());
+		// TODO: filesystem
 		return loadAreaImages(document.FirstChildElement("tileset"),
-			sourcePath.parent_path().c_str(), gid);
+			sourcePath.parent_path().string().c_str(), gid);
 	}
 
 	std::vector<GidPair> gidMap;
 
 	while (child != nullptr)
 	{
-		if (std::experimental::string_view(child->Value()) == "image")
+		// TODO: string_view
+		if (std::string(child->Value()) == "image")
 		{
 			// Canonicalize the source so that two differen looking relative paths are same.
 			auto sourceNormalized = filesystem::canonical(child->Attribute("source"), relativePath);
@@ -96,13 +99,15 @@ std::vector<sf::Sprite> loadAreaTiles(tinyxml2::XMLElement *layerElement,
 			size_t tileIndex = gid - gidTexture->first;
 
 			sf::Sprite tile;
-			tile.setPosition((position % width) * 16, (position / width) * 16);
+			tile.setPosition(static_cast<float>((position % width) * 16),
+				static_cast<float>((position / width) * 16));
 			tile.setTexture(*gidTexture->second);
 
 			auto textureSize = tile.getTexture()->getSize();
 			size_t tileLeft = tileIndex % (textureSize.x / 16);
 			size_t tileTop = tileIndex / (textureSize.x / 16);
-			tile.setTextureRect(sf::IntRect(tileLeft * 16, tileTop * 16, 16, 16));
+			sf::Vector2i position(static_cast<int>(tileLeft * 16), static_cast<int>(tileTop * 16));
+			tile.setTextureRect(sf::IntRect(position, sf::Vector2i(16, 16)));
 			tileList.emplace_back(tile);
 		}
 		tileData = tileData->NextSiblingElement();
@@ -134,10 +139,12 @@ void DynamicArea::loadArea(const char *filename)
 	std::vector<GidPair> gidMap;
 	while (child != nullptr)
 	{
-		auto elementType = std::experimental::string_view(child->Value());
+		// TODO: string_view
+		auto elementType = std::string(child->Value());
 		if (elementType == "tileset")
 		{
-			std::vector<GidPair> gidLoaded = loadAreaImages(child, relativePath.c_str());
+			// TODO: filesystem
+			std::vector<GidPair> gidLoaded = loadAreaImages(child, relativePath.string().c_str());
 			if (gidLoaded.empty())
 			{
 				debug("Unable to parse tileset:", filename);
@@ -152,7 +159,8 @@ void DynamicArea::loadArea(const char *filename)
 		else if (elementType == "layer")
 		{
 			assert(!gidMap.empty());
-			auto layerName = std::experimental::string_view(child->Attribute("name"));
+			// TODO: string_view
+			auto layerName = std::string(child->Attribute("name"));
 			if (layerName == "Background")
 			{
 				auto tiles = loadAreaTiles(child, gidMap);

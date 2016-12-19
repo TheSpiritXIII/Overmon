@@ -26,12 +26,12 @@ PositionType Movable::y() const
 	return y_;
 }
 
-PositionType Movable::xGrid() const
+GridType Movable::xGrid() const
 {
 	return xGrid_;
 }
 
-PositionType Movable::yGrid() const
+GridType Movable::yGrid() const
 {
 	return yGrid_;
 }

@@ -36,7 +36,7 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaNorth = areaMap_.find(area.areaNorth)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(area.areaNorthOffset,
+		transformState.transform.translate(static_cast<float>(area.areaNorthOffset),
 			-static_cast<float>(areaNorth.area.height()));
 		areaNorth.area.draw(foreground, target, transformState);
 	}
@@ -46,7 +46,8 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaSouth = areaMap_.find(area.areaSouth)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(area.areaSouthOffset, area.area.height());
+		transformState.transform.translate(static_cast<float>(area.areaSouthOffset),
+			static_cast<float>(area.area.height()));
 		areaSouth.area.draw(foreground, target, transformState);
 	}
 
@@ -55,7 +56,8 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 		auto &areaEast = areaMap_.find(area.areaEast)->second;
 
 		sf::RenderStates transformState = states;
-		transformState.transform.translate(area.area.width(), area.areaEastOffset);
+		transformState.transform.translate(static_cast<float>(area.area.width()),
+			static_cast<float>(area.areaEastOffset));
 		areaEast.area.draw(foreground, target, transformState);
 	}
 
@@ -65,7 +67,7 @@ void DynamicAreaManager::draw(bool foreground, sf::RenderTarget &target,
 
 		sf::RenderStates transformState = states;
 		transformState.transform.translate(-static_cast<float>(areaWest.area.width()),
-			area.areaWestOffset);
+			static_cast<float>(area.areaWestOffset));
 		areaWest.area.draw(foreground, target, transformState);
 	}
 }
@@ -103,7 +105,8 @@ std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
 		return std::unordered_map<AreaId, DynamicAreaManager::Area>();
 	}
 
-	auto config = cpptoml::parse_file(manifestPath.c_str());
+	// TODO: filesystem
+	auto config = cpptoml::parse_file(manifestPath.string().c_str());
 	auto areaList = config->get_table_array("area");
 
 	if (areaList)
@@ -140,7 +143,8 @@ std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
 						found = areaMap.emplace(*id, Area()).first;
 					}
 
-					found->second.area.loadArea(path.c_str());
+					// TODO: filesystem
+					found->second.area.loadArea(path.string().c_str());
 
 					auto border = table->get_as<std::string>("north");
 					found->second.areaNorth = border ? areaNameMap.find(*border)->second : *id;

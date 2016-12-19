@@ -4,7 +4,9 @@
 ## Compiling
 Use `cmake` to compile the project. You must have `SFML` installed on your system.
 
-`Overmon` uses several C++17 features. `CMakeLists.txt` is configured to enable them for GCC and Clang.
+`Overmon` uses several C++17 features. As such, the latest compilers are required.
+ - `CMakeLists.txt` is configured to enable C++17 filesystem for GCC and Clang.
+ - On Windows, only Microsoft Visual Studio 2015 is supported.
 
 ## Usage
 There are various subprojects:

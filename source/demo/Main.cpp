@@ -6,7 +6,7 @@
 #include <Overmon/Resource/SpriteManager.hpp>
 #include <SFML/Graphics.hpp>
 
-const size_t FPS = 120;
+const size_t FPS = 60;
 const size_t VIEW_WIDTH = 256;
 const size_t VIEW_HEIGHT = 192;
 const size_t WINDOW_WIDTH = VIEW_WIDTH * 2;
@@ -18,7 +18,7 @@ int main()
 	window.setFramerateLimit(FPS);
 
 	sf::View view;
-	view.setSize(VIEW_WIDTH, VIEW_HEIGHT);
+	view.setSize(static_cast<float>(VIEW_WIDTH), static_cast<float>(VIEW_HEIGHT));
 	window.setView(view);
 
 	sf::Event event;
@@ -38,7 +38,7 @@ int main()
 
 	overmon::AreaManager areaManager;
 
-	const float delta = 1.0 / FPS;
+	const float delta = 1.0f / FPS;
 
 	while (window.isOpen())
 	{
@@ -54,7 +54,7 @@ int main()
 		turningNpc.update(global, delta);
 		walkingNpc.update(global, delta);
 
-		view.setCenter(player.x() + 8, player.y() + 8);
+		view.setCenter(static_cast<float>(player.x() + 8), static_cast<float>(player.y() + 8));
 		window.setView(view);
 
 		window.clear();

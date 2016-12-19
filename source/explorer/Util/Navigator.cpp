@@ -7,7 +7,7 @@ Navigator::Navigator(const sf::Window &window)
 	: zoom_(4)
 	, active_(false)
 {
-	view_.setSize(window.getSize().x, window.getSize().y);
+	view_.setSize(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
 	view_.setCenter(0, 0);
 }
 
@@ -56,7 +56,7 @@ void Navigator::update(sf::Event event)
 		}
 		break;
 	case sf::Event::Resized:
-		view_.setSize(event.size.width, event.size.height);
+		view_.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
 		break;
 	default:
 		break;

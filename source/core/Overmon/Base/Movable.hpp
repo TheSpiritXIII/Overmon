@@ -23,10 +23,10 @@ public:
 	PositionType y() const;
 
 	/// The x grid coordinate of the NPC.
-	PositionType xGrid() const;
+	GridType xGrid() const;
 
 	/// The y grid coordinate of the NPC.
-	PositionType yGrid() const;
+	GridType yGrid() const;
 
 	/// Returns the current direction.
 	Direction direction() const;

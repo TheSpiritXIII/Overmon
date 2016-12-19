@@ -23,7 +23,8 @@ void DynamicSpriteManager::setTexture(sf::Sprite &sprite, SpriteId id) const
 	if (found != spriteMap_.end())
 	{
 		sprite.setTexture(found->second.texture);
-		sprite.setOrigin(found->second.offset_x, found->second.offset_y);
+		sprite.setOrigin(static_cast<float>(found->second.offset_x),
+			static_cast<float>(found->second.offset_y));
 	}
 }
 
@@ -36,7 +37,10 @@ void DynamicSpriteManager::setFrame(sf::Sprite &sprite, SpriteId id, uint8_t fra
 		size_t columns = size.x / found->second.width;
 		size_t x = (frame % columns) * found->second.width;
 		size_t y = (frame / columns) * found->second.height;
-		sprite.setTextureRect(sf::IntRect(x, y, found->second.width, found->second.height));
+		sf::Vector2i texturePosition(static_cast<int>(x), static_cast<int>(y));
+		sf::Vector2i textureSize(static_cast<int>(found->second.width),
+			static_cast<int>(found->second.height));
+		sprite.setTextureRect(sf::IntRect(texturePosition, textureSize));
 	}
 }
 
@@ -54,7 +58,8 @@ void DynamicSpriteManager::reload()
 		return;
 	}
 
-	auto config = cpptoml::parse_file(manifestPath.c_str());
+	// TODO: filesystem
+	auto config = cpptoml::parse_file(manifestPath.string().c_str());
 	auto spriteList = config->get_table_array("sprite");
 
 	if (spriteList)
@@ -82,7 +87,8 @@ void DynamicSpriteManager::reload()
 						found = spriteMap_.emplace(*id, Sprite()).first;
 					}
 
-					found->second.texture.loadFromFile(path.c_str());
+					// TODO: filesystem
+					found->second.texture.loadFromFile(path.string().c_str());
 					auto textureSize = found->second.texture.getSize();
 
 					auto data = table->get_as<size_t>("width");

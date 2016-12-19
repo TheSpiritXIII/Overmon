@@ -38,7 +38,9 @@ void NavigatorDisplay::update(const Navigator &navigator)
 
 void NavigatorDisplay::draw(sf::RenderTarget &target, sf::RenderStates states)
 {
-	target.setView(sf::View(sf::FloatRect(0, 0, target.getSize().x, target.getSize().y)));
+	sf::Vector2f size(static_cast<float>(target.getSize().x),
+		static_cast<float>(target.getSize().y));
+	target.setView(sf::View(sf::FloatRect(sf::Vector2f(0, 0), size)));
 	target.draw(rectShape_, states);
 	target.draw(text_, states);
 }

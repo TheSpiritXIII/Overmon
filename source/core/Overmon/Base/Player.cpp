@@ -49,7 +49,7 @@ void Player::update(const Global &global, DeltaTime delta)
 			{
 				if (directionLast != direction())
 				{
-					wait_ = 0.1;
+					wait_ = 0.1f;
 				}
 				runLeg_ = ((leg_) % 2) * 2;
 			}
