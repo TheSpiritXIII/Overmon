@@ -1,9 +1,9 @@
 #include <experimental/filesystem>
 
-#include "External/cpptoml.h"
-#include "Resource/DynamicAreaManager.hpp"
-#include "Resource/DynamicManager.hpp"
-#include "Util/Debug.hpp"
+#include "Overmon/External/cpptoml.h"
+#include "Overmon/Resource/DynamicAreaManager.hpp"
+#include "Overmon/Resource/DynamicManager.hpp"
+#include "Overmon/Util/Debug.hpp"
 
 using namespace std::experimental;
 
@@ -90,6 +90,7 @@ void DynamicAreaManager::reload()
 std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
 {
 	std::unordered_map<AreaId, DynamicAreaManager::Area> areaMap;
+	std::unordered_map<std::string, AreaId> areaNameMap;
 	debug("Reloading all areas...");
 
 	filesystem::path manifestPath(resourcesDirectory);
@@ -107,6 +108,15 @@ std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
 
 	if (areaList)
 	{
+		for (const auto &table : *areaList)
+		{
+			auto id = table->get_as<AreaId>("id");
+			if (id)
+			{
+				auto name = table->get_as<std::string>("name");
+				areaNameMap.emplace(*name, *id);
+			}
+		}
 		for (const auto &table : *areaList)
 		{
 			auto id = table->get_as<AreaId>("id");
@@ -132,17 +142,17 @@ std::unordered_map<AreaId, DynamicAreaManager::Area> DynamicAreaManager::load()
 
 					found->second.area.loadArea(path.c_str());
 
-					auto border = table->get_as<AreaId>("north");
-					found->second.areaNorth = border ? *border : *id;
+					auto border = table->get_as<std::string>("north");
+					found->second.areaNorth = border ? areaNameMap.find(*border)->second : *id;
 
-					border = table->get_as<AreaId>("south");
-					found->second.areaSouth = border ? *border : *id;
+					border = table->get_as<std::string>("south");
+					found->second.areaSouth = border ? areaNameMap.find(*border)->second : *id;
 
-					border = table->get_as<AreaId>("east");
-					found->second.areaEast = border ? *border : *id;
+					border = table->get_as<std::string>("east");
+					found->second.areaEast = border ? areaNameMap.find(*border)->second : *id;
 
-					border = table->get_as<AreaId>("west");
-					found->second.areaWest = border ? *border : *id;
+					border = table->get_as<std::string>("west");
+					found->second.areaWest = border ? areaNameMap.find(*border)->second : *id;
 
 					auto offset = table->get_as<int32_t>("northOffset");
 					found->second.areaNorthOffset = offset ? *offset * 16 : 0;

@@ -1,8 +1,7 @@
-#include "Player.hpp"
-
-#include "Resource/SpriteManager.hpp"
-
 #include <iostream>
+
+#include "Overmon/Base/Player.hpp"
+#include "Overmon/Resource/SpriteManager.hpp"
 
 namespace overmon
 {

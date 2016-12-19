@@ -43,3 +43,6 @@ Makefile*
 
 # QtCtreator CMake
 CMakeLists.txt.user*
+
+## General
+binary/

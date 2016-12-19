@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base/Movable.hpp"
-#include "Resource/SpriteManager.hpp"
+#include "Overmon/Base/Movable.hpp"
+#include "Overmon/Resource/SpriteManager.hpp"
 
 namespace overmon
 {

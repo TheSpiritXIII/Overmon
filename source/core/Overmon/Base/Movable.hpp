@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Util/Updatable.hpp"
-#include "../Util/Direction.hpp"
+#include "Overmon/Util/Direction.hpp"
+#include "Overmon/Util/Updatable.hpp"
 
 namespace overmon
 {

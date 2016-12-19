@@ -24,6 +24,8 @@ void Navigator::update(sf::Event event)
 		case sf::Keyboard::Subtract:
 			zoomOut();
 			break;
+		default:
+			break;
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
@@ -55,7 +57,8 @@ void Navigator::update(sf::Event event)
 		break;
 	case sf::Event::Resized:
 		view_.setSize(event.size.width, event.size.height);
-//		view_.zoom(exp2(4 - zoom_));
+		break;
+	default:
 		break;
 	}
 }

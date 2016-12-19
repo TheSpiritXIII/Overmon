@@ -3,9 +3,9 @@
 #include <experimental/filesystem>
 #include <unordered_map>
 
-#include "DynamicArea.hpp"
-#include "External/tinyxml2.h"
-#include "Util/Debug.hpp"
+#include "Overmon/Resource/DynamicArea.hpp"
+#include "Overmon/External/tinyxml2.h"
+#include "Overmon/Util/Debug.hpp"
 
 using namespace std::experimental;
 

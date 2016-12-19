@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Resource/DynamicArea.hpp"
+#include "Overmon/Resource/DynamicArea.hpp"
 
 namespace overmon
 {

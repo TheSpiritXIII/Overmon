@@ -1,8 +1,8 @@
 #include <queue>
 
-#include "Resource/RegionViewer.hpp"
-#include "Resource/DynamicAreaManager.hpp"
-#include "Util/Debug.hpp"
+#include "Overmon/Resource/RegionViewer.hpp"
+#include "Overmon/Resource/DynamicAreaManager.hpp"
+#include "Overmon/Util/Debug.hpp"
 
 namespace overmon
 {
@@ -33,10 +33,6 @@ void RegionViewer::reload()
 		auto areaProcess = areaMap.find(areaFront.first);
 
 		areaList_.push_back({areaProcess->second.area, areaFront.second});
-
-//		sf::Transform transform = areaFront.second;
-//			transform.translate(0, -16);
-//			areaQueue.push({areaProcess->second.areaNorth, transform});
 
 		auto add_area_if = [&](auto areaPosition, auto areaTranslate)
 		{

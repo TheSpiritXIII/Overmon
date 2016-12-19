@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Resource/SpriteManager.hpp"
-#include "Util/Updatable.hpp"
+#include "Overmon/Resource/SpriteManager.hpp"
+#include "Overmon/Util/Updatable.hpp"
 
 namespace overmon
 {

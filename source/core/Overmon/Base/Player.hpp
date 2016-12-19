@@ -1,10 +1,9 @@
 #include <SFML/Graphics.hpp>
 
-#include "Movable.hpp"
-
-#include "Resource/SpriteManager.hpp"
-#include "Base/Global.hpp"
-#include "Base/Sprite.hpp"
+#include "Overmon/Base/Global.hpp"
+#include "Overmon/Base/Sprite.hpp"
+#include "Overmon/Base/Movable.hpp"
+#include "Overmon/Resource/SpriteManager.hpp"
 
 namespace overmon
 {

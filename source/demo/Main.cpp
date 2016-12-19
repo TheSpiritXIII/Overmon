@@ -1,16 +1,12 @@
+#include <Overmon/Base/Global.hpp>
+#include <Overmon/Base/Player.hpp>
+#include <Overmon/NPC/Turning.hpp>
+#include <Overmon/NPC/Walking.hpp>
+#include <Overmon/Resource/AreaManager.hpp>
+#include <Overmon/Resource/SpriteManager.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "Base/Global.hpp"
-#include "Base/Player.hpp"
-#include "NPC/Turning.hpp"
-#include "NPC/Walking.hpp"
-#include "Resource/AreaManager.hpp"
-#include "Resource/SpriteManager.hpp"
-#include "Resource/RegionViewer.hpp"
-//#include "Util/Navigator.hpp"
-//#include "Util/NavigatorDisplay.hpp"
-
-const size_t FPS = 60;
+const size_t FPS = 120;
 const size_t VIEW_WIDTH = 256;
 const size_t VIEW_HEIGHT = 192;
 const size_t WINDOW_WIDTH = VIEW_WIDTH * 2;
@@ -41,11 +37,6 @@ int main()
 	overmon::Walking walkingNpc(4, 0, overmon::Direction::East, spritePool[2], 0);
 
 	overmon::AreaManager areaManager;
-//	overmon::RegionViewer regionViewer;
-//	regionViewer.reload();
-
-//	overmon::Navigator navigator(window);
-//	overmon::NavigatorDisplay navigatorDisplay;
 
 	const float delta = 1.0 / FPS;
 
@@ -57,8 +48,6 @@ int main()
 			{
 				window.close();
 			}
-//			navigator.update(event);
-//			navigatorDisplay.update(navigator);
 		}
 		global.update(delta);
 		player.update(global, delta);
@@ -67,7 +56,6 @@ int main()
 
 		view.setCenter(player.x() + 8, player.y() + 8);
 		window.setView(view);
-//		window.setView(navigator.view());
 
 		window.clear();
 
@@ -88,16 +76,8 @@ int main()
 			sprite->draw(window);
 		}
 
-//		regionViewer.draw(window);
-//		navigatorDisplay.draw(window);
-
 		areaManager.drawForeground(window);
 		window.display();
-
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
-//		{
-//			global.spriteManager().reload();
-//		}
 	}
 	return EXIT_SUCCESS;
 }

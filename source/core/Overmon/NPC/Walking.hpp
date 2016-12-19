@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base/Global.hpp"
-#include "NPC/Timely.hpp"
+#include "Overmon/Base/Global.hpp"
+#include "Overmon/NPC/Timely.hpp"
 
 namespace overmon
 {

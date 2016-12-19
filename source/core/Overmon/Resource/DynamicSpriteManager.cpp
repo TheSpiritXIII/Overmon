@@ -1,10 +1,10 @@
 #include <experimental/filesystem>
 #include <iostream>
 
-#include "External/cpptoml.h"
-#include "Resource/DynamicManager.hpp"
-#include "Resource/DynamicSpriteManager.hpp"
-#include "Util/Debug.hpp"
+#include "Overmon/External/cpptoml.h"
+#include "Overmon/Resource/DynamicManager.hpp"
+#include "Overmon/Resource/DynamicSpriteManager.hpp"
+#include "Overmon/Util/Debug.hpp"
 
 namespace overmon
 {
